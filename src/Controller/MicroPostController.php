@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use DateTime;
 use App\Entity\MicroPost;
+use App\Form\MicroPostType;
 use App\Repository\MicroPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,50 +81,37 @@ class MicroPostController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
 
-        $microPost = new MicroPost();
-        $form = $this->createFormBuilder($microPost)
-        ->add('title', TextType::class, [
-            'label' => 'Post Title',  // Custom label
-            // 'attr' => ['placeholder' => 'Enter a title for your post'], // HTML attributes
-        ])
-        ->add('text', TextType::class, [
-            'label' => 'Post Content',
-            // 'attr' => ['placeholder' => 'Write the content here'],
-        ])
+        $form = $this->createForm(
+            MicroPostType::class,
+            new MicroPost()
+        );
         
-        ->getForm();
-    
 
 
-        //     $form = $this->createForm(
-        //         MicroPostType::class,
-        //         new MicroPost()
-        //     );
-            $form->handleRequest($request);
+        $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $post = $form->getData();
-                $post->setCreated(new DateTime());
-            
-                $entityManager->persist($post);
-                $entityManager->flush(); // Save the changes to the database
-            
-                $this->addFlash(
-                    'success',
-                    'Your micro post has been added.'
-                );
-            
-                return $this->redirectToRoute('app_micro_post'); 
-            }
-            
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post = $form->getData();
+            $post->setCreated(new DateTime());
 
-            return $this->render(
-                'micro_post/add.html.twig',
-                [
-                    'form' => $form->createView()
-                ]
+            $entityManager->persist($post);
+            $entityManager->flush(); // Save the changes to the database
+
+            $this->addFlash(
+                'success',
+                'Your micro post has been added.'
             );
-            
+
+            return $this->redirectToRoute('app_micro_post');
+        }
+
+
+        return $this->render(
+            'micro_post/add.html.twig',
+            [
+                'form' => $form->createView()
+            ]
+        );
     }
 
     #[Route(
@@ -141,48 +129,35 @@ class MicroPostController extends AbstractController
     ): Response {
 
         // $microPost = new MicroPost();
-        $form = $this->createFormBuilder($post)
-        ->add('title', TextType::class, [
-            'label' => 'Post Title',  // Custom label
-            // 'attr' => ['placeholder' => 'Enter a title for your post'], // HTML attributes
-        ])
-        ->add('text', TextType::class, [
-            'label' => 'Post Content',
-            // 'attr' => ['placeholder' => 'Write the content here'],
-        ])
-        
-        ->getForm();
-    
+        // $form = $this->createFormBuilder($post)
+        $form = $this->createForm(
+            MicroPostType::class,
+            $post
+        );
 
+        $form->handleRequest($request);
 
-        //     $form = $this->createForm(
-        //         MicroPostType::class,
-        //         new MicroPost()
-        //     );
-            $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post = $form->getData();
+            // $post->setCreated(new DateTime());
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $post = $form->getData();
-                // $post->setCreated(new DateTime());
-            
-                $entityManager->persist($post);
-                $entityManager->flush(); // Save the changes to the database
-            
-                $this->addFlash(
-                    'success',
-                    'Your micro post has been updated.'
-                );
-            
-                return $this->redirectToRoute('app_micro_post'); 
-            }
-            
+            $entityManager->persist($post);
+            $entityManager->flush(); // Save the changes to the database
 
-            return $this->render(
-                'micro_post/add.html.twig',
-                [
-                    'form' => $form->createView()
-                ]
+            $this->addFlash(
+                'success',
+                'Your micro post has been updated.'
             );
-            
+
+            return $this->redirectToRoute('app_micro_post');
+        }
+
+
+        return $this->render(
+            'micro_post/add.html.twig',
+            [
+                'form' => $form->createView()
+            ]
+        );
     }
 }
