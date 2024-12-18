@@ -84,15 +84,13 @@ class MicroPostController extends AbstractController
         $form = $this->createFormBuilder($microPost)
         ->add('title', TextType::class, [
             'label' => 'Post Title',  // Custom label
-            'attr' => ['placeholder' => 'Enter a title for your post'], // HTML attributes
+            // 'attr' => ['placeholder' => 'Enter a title for your post'], // HTML attributes
         ])
         ->add('text', TextType::class, [
             'label' => 'Post Content',
-            'attr' => ['placeholder' => 'Write the content here'],
+            // 'attr' => ['placeholder' => 'Write the content here'],
         ])
-        ->add('submit', SubmitType::class, [
-            'label' => 'Save',
-        ])
+        
         ->getForm();
     
 
@@ -115,7 +113,7 @@ class MicroPostController extends AbstractController
                     'Your micro post has been added.'
                 );
             
-                return $this->redirectToRoute('app_micro_post'); // Redirect to a specific route
+                return $this->redirectToRoute('app_micro_post'); 
             }
             
 
