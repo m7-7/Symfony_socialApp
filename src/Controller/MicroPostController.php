@@ -116,7 +116,7 @@ class MicroPostController extends AbstractController
 
     #[Route(
         '/micro-post/{post}/edit',
-        name: 'edit',
+        name: 'app_micro_post_edit',
         // priority: 2
     )]
 
@@ -154,7 +154,7 @@ class MicroPostController extends AbstractController
 
 
         return $this->render(
-            'micro_post/add.html.twig',
+            'micro_post/edit.html.twig',
             [
                 'form' => $form->createView()
             ]
