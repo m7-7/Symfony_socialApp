@@ -45,9 +45,16 @@ class MicroPostRepository extends ServiceEntityRepository
 
     public function findAllWithComments(): array
     {
-        return $this->findAllQuery(
-            withComments: true
-        )->getQuery()->getResult();
+        return $this->createQueryBuilder('p')
+        ->addSelect('c')
+            ->leftJoin('p.comments', 'c')
+            ->orderBy('p.created', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        // return $this->findAllQuery(
+        //     withComments: true
+        // )->getQuery()->getResult();
     }
 
     // public function findAllByAuthor(
@@ -135,6 +142,7 @@ class MicroPostRepository extends ServiceEntityRepository
         return $query->orderBy('p.created', 'DESC');
     }
 
+    
     //    /**
     //     * @return MicroPost[] Returns an array of MicroPost objects
     //     */
