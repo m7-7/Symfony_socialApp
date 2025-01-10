@@ -4,7 +4,10 @@
 {% endblock %}
 
 {% block bread%}
-	➔Post Comment
+	➔
+	<a href="{{ path('app_micro_post_show', {post:post.id})}}">Post
+	</a>
+	➔ Comment
 {% endblock %}
 {% block body %}
 	{{  include("micro_post/_post.html.twig", {post: post}) }}
@@ -13,7 +16,7 @@
 	<div>
 		{{form_errors(form)}}
 	</div>
-	
+
 
 	<div>
 		{{form_label(form.text, 'Please enter the comment', {'label_attr': {'class': 'block text-sm text-gray-700 dark:text-gray-300 font-medium'}})}}
@@ -23,7 +26,7 @@
 
 	<div>
 		<button type='submit' class="block w-full shadow-sm border-transparent bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500
-								dark:hover:bg-indigo-400 text-white rounded-md border p-2 mt-4 mb-2	">
+																dark:hover:bg-indigo-400 text-white rounded-md border p-2 mt-4 mb-2	">
 			Add comment
 		</button>
 	</div>
