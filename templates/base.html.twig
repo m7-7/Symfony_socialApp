@@ -28,14 +28,12 @@ darkMode: 'class'
 		<div class="w-full md:w-2/3 mx-auto mb-4 flex justify-between items-center">
 			<div class="text-4xl">
 				<a href="{{ path ('app_micro_post')}}">Home</a>
-				{% block bread%}
-				
-				{% endblock %}
+				{% block bread%}{% endblock %}
 			</div>
 			<div class="text-right">
 				<div class="text-sm text-gray-400 dark:text-gray-500">
 					<div>
-						Login & Registration
+						<a href="{{ path('app_login') }}">Login</a>
 					</div>
 					<div>
 						<a href="{{ path ('app_micro_post_add')}}">Add New</a>
