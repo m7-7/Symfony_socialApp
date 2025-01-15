@@ -14,10 +14,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 class MicroPostController extends AbstractController
 {
     #[Route('/micro-post', name: 'app_micro_post')]
@@ -88,7 +90,7 @@ class MicroPostController extends AbstractController
             MicroPostType::class,
             new MicroPost()
         );
-        
+
 
 
         $form->handleRequest($request);
@@ -123,7 +125,7 @@ class MicroPostController extends AbstractController
         // priority: 2
     )]
 
-    // #[IsGranted('ROLE_WRITER')]
+    #[IsGranted('ROLE_EDITOR')]
     public function edit(
         MicroPost $post,
         Request $request,
@@ -169,13 +171,14 @@ class MicroPostController extends AbstractController
         // priority: 2
     )]
 
-    // #[IsGranted('ROLE_WRITER')]
+    #[IsGranted('ROLE_COMMENTER')]
     public function addComment(
         MicroPost $post,
         Request $request,
         CommentRepository $comments,
         EntityManagerInterface $entityManager
     ): Response {
+
 
         $form = $this->createForm(
             CommentType::class,
@@ -197,8 +200,9 @@ class MicroPostController extends AbstractController
                 'Your comment has been updated.'
             );
 
-            return $this->redirectToRoute('app_micro_post_show',
-            ['post'=> $post->getId()]
+            return $this->redirectToRoute(
+                'app_micro_post_show',
+                ['post' => $post->getId()]
             );
         }
 
@@ -211,5 +215,4 @@ class MicroPostController extends AbstractController
             ]
         );
     }
-    
 }
