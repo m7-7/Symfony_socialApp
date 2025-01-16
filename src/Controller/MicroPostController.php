@@ -60,7 +60,7 @@ class MicroPostController extends AbstractController
     // }
 
     #[Route('/micro-post/{post}', name: 'app_micro_post_show')]
-    // #[IsGranted(MicroPost::VIEW, 'post')]
+    #[IsGranted(MicroPost::VIEW, 'post')]
     public function showOne(MicroPost $post): Response
     {
 
@@ -77,7 +77,7 @@ class MicroPostController extends AbstractController
         name: 'app_micro_post_add',
         priority: 2
     )]
-
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     // #[IsGranted('ROLE_WRITER')]
     public function add(
         Request $request,
@@ -123,7 +123,7 @@ class MicroPostController extends AbstractController
         // priority: 2
     )]
 
-    #[IsGranted('ROLE_EDITOR')]
+    #[IsGranted(MicroPost::EDIT, 'post')]
     public function edit(
         MicroPost $post,
         Request $request,
