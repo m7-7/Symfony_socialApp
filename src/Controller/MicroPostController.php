@@ -138,6 +138,8 @@ class MicroPostController extends AbstractController
 
         $form->handleRequest($request);
 
+        $this->denyAccessUnlessGranted(MicroPost::EDIT, $post);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
             // $post->setCreated(new DateTime());
