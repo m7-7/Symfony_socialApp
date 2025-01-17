@@ -4,6 +4,12 @@ controllers:
         namespace: App\Controller
     type: attribute
 
+# config/routes.yaml
+test_email:
+    path: /test-email
+    controller: App\Controller\TestEmailController::sendTestEmail
+
+
 # app_index:
 #     path: /
 #     controller: App\Controller\HelloController::index
