@@ -81,8 +81,7 @@ class MicroPostController extends AbstractController
     // #[IsGranted('ROLE_WRITER')]
     public function add(
         Request $request,
-        MicroPostRepository $posts,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $posts
     ): Response {
 
         $form = $this->createForm(
@@ -97,8 +96,8 @@ class MicroPostController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
             $post->setAuthor($this->getUser());
-            $entityManager->persist($post);
-            $entityManager->flush(); // Save the changes to the database
+            $posts->persist($post);
+            $posts->flush(); // Save the changes to the database
 
             $this->addFlash(
                 'success',
@@ -127,8 +126,7 @@ class MicroPostController extends AbstractController
     public function edit(
         MicroPost $post,
         Request $request,
-        MicroPostRepository $posts,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $posts
     ): Response {
 
         $form = $this->createForm(
@@ -144,8 +142,8 @@ class MicroPostController extends AbstractController
             $post = $form->getData();
             // $post->setCreated(new DateTime());
 
-            $entityManager->persist($post);
-            $entityManager->flush(); // Save the changes to the database
+            $posts->persist($post);
+            $posts->flush(); // Save the changes to the database
 
             $this->addFlash(
                 'success',
@@ -175,8 +173,7 @@ class MicroPostController extends AbstractController
     public function addComment(
         MicroPost $post,
         Request $request,
-        CommentRepository $comments,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $comments
     ): Response {
 
 
@@ -192,8 +189,8 @@ class MicroPostController extends AbstractController
             $comment->setPost($post);
             $comment->setAuthor($this->getUser());
 
-            $entityManager->persist($comment);
-            $entityManager->flush(); // Save the changes to the database
+            $comments->persist($comment);
+            $comments->flush(); // Save the changes to the database
 
             $this->addFlash(
                 'success',

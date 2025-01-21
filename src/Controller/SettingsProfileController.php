@@ -19,8 +19,7 @@ class SettingsProfileController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function profile(
         Request $request,
-        EntityManagerInterface $entityManager,
-        UserRepository $users
+        EntityManagerInterface $users,
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
@@ -38,9 +37,9 @@ class SettingsProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $userProfile = $form->getData();
             $user->setUserProfile($userProfile);
-            $entityManager->persist($user);  
+            $users->persist($user);  
 
-            $entityManager->flush();  // Save both entities to the database
+            $users->flush();  // Save both entities to the database
 
             $this->addFlash(
                 'success',
