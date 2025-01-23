@@ -58,21 +58,21 @@ class MicroPostRepository extends ServiceEntityRepository
     }
 
     
-    // public function findAllByAuthor(
-    //     int | User $author
-    // ): array {
-    //     return $this->findAllQuery(
-    //         withComments: true,
-    //         withLikes: true,
-    //         withAuthors: true,
-    //         withProfiles: true
-    //     )->where('p.author = :author')
-    //         ->setParameter(
-    //             'author',
-    //             $author instanceof User ? $author->getId() : $author
-    //         )->getQuery()
-    //         ->getResult();
-    // }
+    public function findAllByAuthor(
+        int | User $author
+    ): array {
+        return $this->findAllQuery(
+            withComments: true,
+            withLikes: true,
+            withAuthors: true,
+            withProfiles: true
+        )->where('p.author = :author')
+            ->setParameter(
+                'author',
+                $author instanceof User ? $author->getId() : $author
+            )->getQuery()
+            ->getResult();
+    }
 
     public function findAllByAuthors(
         Collection|array $authors
