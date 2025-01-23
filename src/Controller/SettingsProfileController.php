@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\UserProfile;
 use App\Form\UserProfileType;
+use App\Form\ProfileImageType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +40,7 @@ class SettingsProfileController extends AbstractController
             $user->setUserProfile($userProfile);
             $users->persist($user);
 
-            $users->flush();  // Save both entities to the database
+            $users->flush();
 
             $this->addFlash(
                 'success',
@@ -60,6 +61,13 @@ class SettingsProfileController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function profileImage(): Response
     {
-        return $this->render('settings_profile/profile_image.html.twig');
+        $form = $this->createForm(ProfileImageType::class);
+
+        return $this->render(
+            'settings_profile/profile_image.html.twig',
+            [
+                'form' => $form->createView(),
+            ]
+        );
     }
 }
