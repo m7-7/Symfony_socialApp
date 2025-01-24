@@ -11,8 +11,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class SettingsProfileController extends AbstractController
 {
@@ -59,9 +61,52 @@ class SettingsProfileController extends AbstractController
 
     #[Route('/settings/profile-image', name: 'app_settings_profile_image')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function profileImage(): Response
-    {
+    public function profileImage(
+        Request $request,
+        EntityManagerInterface $users,
+        SluggerInterface $slugger
+    ): Response {
         $form = $this->createForm(ProfileImageType::class);
+        /** @var User $user */
+        $user = $this->getUser();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $profileImageFile = $form->get('profileImage')->getData();
+
+            if ($profileImageFile) {
+                $originalFilename = pathinfo($profileImageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            }
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $profileImageFile->guessExtension();
+
+            try {
+                $profileImageFile->move(
+                    $this->getParameter('profiles_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                // $this->addFlash(
+                //     'danger',
+                //     'There was an error uploading your profile image.'
+                // );
+
+                // return $this->redirectToRoute('app_settings_profile_image');
+            }
+
+            $profile = $user->getUserProfile() ?? new UserProfile();
+            $profile->setImage($newFilename);
+
+            $users->persist($user);
+            $users->flush();
+
+            $this->addFlash(
+                'success',
+                'Your profile image was updated.'
+            );
+
+            return $this->redirectToRoute('app_settings_profile_image');
+        }
 
         return $this->render(
             'settings_profile/profile_image.html.twig',
