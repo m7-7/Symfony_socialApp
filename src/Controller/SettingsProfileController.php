@@ -96,6 +96,7 @@ class SettingsProfileController extends AbstractController
 
             $profile = $user->getUserProfile() ?? new UserProfile();
             $profile->setImage($newFilename);
+            $user->setUserProfile($profile);
 
             $users->persist($user);
             $users->flush();
