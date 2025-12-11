@@ -1,1 +1,1 @@
-# Symfony_course2024
+# Symfony_socialApp
