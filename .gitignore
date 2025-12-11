@@ -27,3 +27,5 @@
 ###< symfony/asset-mapper ###
 
 /instructions.txt
+.env
+.env.*
